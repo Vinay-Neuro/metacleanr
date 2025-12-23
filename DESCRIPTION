@@ -7,7 +7,7 @@ Description: Domain-aware pre-analysis validation, harmonization, and provenance
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/YOUR-GITHUB-USERNAME/metacleanr
+URL: https://github.com/Vinay-Neuro/metacleanr
 BugReports: https://github.com/YOUR-GITHUB-USERNAME/metacleanr/issues
 Depends:
 Imports: dplyr, stringr, janitor, stringdist, tibble, rlang
