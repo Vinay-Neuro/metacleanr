@@ -1,0 +1,14 @@
+Package: metacleanr
+Type: Package
+Title: Reproducible validation and harmonization tools for meta-analysis datasets
+Version: 0.1.0
+Authors@R: person(given = "Vinay", family = "Suresh", role = c("aut", "cre"), email = "vinay.suresh@bnc.ox.ac.uk")
+Description: Domain-aware pre-analysis validation, harmonization, and provenance-tracked fixes for meta-analysis datasets.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/YOUR-GITHUB-USERNAME/metacleanr
+BugReports: https://github.com/YOUR-GITHUB-USERNAME/metacleanr/issues
+Depends:
+Imports: dplyr, stringr, janitor, stringdist, tibble, rlang
+Suggests: testthat, knitr, rmarkdown

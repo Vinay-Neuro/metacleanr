@@ -1,0 +1,9 @@
+citHeader("To cite package 'metacleanr' in publications, use:")
+
+citEntry(
+  "Manual",
+  title = "metacleanr: Reproducible validation and harmonization tools for meta-analysis datasets",
+  author = person("Vinay", "Suresh"),
+  year = "2025",
+  note = "R package version 0.1.0, https://github.com/YOUR-GITHUB-USERNAME/metacleanr (MIT License)."
+)
