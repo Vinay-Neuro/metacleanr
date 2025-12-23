@@ -1,5 +1,19 @@
-# Robust detect_subnetworks replacement
-# Requires: dplyr, igraph (both are common deps; adjust imports accordingly)
+# R/nma_checks.R
+# Utility functions for NMA checks in metacleanr
+# - detect_subnetworks(): robust edge-list -> igraph components
+# - infer_sd(): infer / impute sd from SE/CI/IQR/range (annotates provenance)
+# - nma_precheck(): helper that runs the above and returns a small report
+
+#' Detect subnetworks (robust)
+#'
+#' Build pairwise edges from studies' interventions and return igraph components.
+#' Robustly ignores single-arm or malformed studies (returns NULL when no edges).
+#'
+#' @param data data.frame
+#' @param study_id string column name for study id
+#' @param intervention string column name for intervention
+#' @return list with edgelist (data.frame with columns study, from, to),
+#'         subnetworks (list of character vectors), and component_membership (data.frame)
 detect_subnetworks <- function(data, study_id, intervention) {
   # defensive checks
   if (missing(data) || missing(study_id) || missing(intervention)) {
@@ -44,16 +58,15 @@ detect_subnetworks <- function(data, study_id, intervention) {
     )
   })
 
-  # remove NULLs produced by single-arm or invalid studies
-  # base-R variant so it doesn't require purrr
+  # defensive: remove NULL or non-data.frame elements before rbind
   if (length(edgelist) == 0L) {
-    stop("detect_subnetworks: no studies to process.")
+    return(NULL)
   }
   non_null_idx <- vapply(edgelist, function(x) !is.null(x) && is.data.frame(x) && nrow(x) > 0L, logical(1))
   edgelist_clean <- edgelist[non_null_idx]
 
   if (length(edgelist_clean) == 0L) {
-    stop("detect_subnetworks: no valid edges could be constructed. Check that studies have >= 2 arms and interventions are present.")
+    return(NULL)
   }
 
   # safe rbind
@@ -63,12 +76,13 @@ detect_subnetworks <- function(data, study_id, intervention) {
   names(edgelist_df)[names(edgelist_df) == "t2"] <- "to"
 
   # create graph and detect connected components (subnetworks)
-  # handle if igraph not installed
+  # if igraph not available, return only edgelist
   if (!requireNamespace("igraph", quietly = TRUE)) {
     warning("igraph not available: returning edgelist without subnetworks. Install igraph for subnetwork detection.")
     return(list(
       edgelist = edgelist_df,
-      subnetworks = NULL
+      subnetworks = NULL,
+      component_membership = NULL
     ))
   }
 
